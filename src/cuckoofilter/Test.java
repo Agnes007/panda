@@ -2,7 +2,13 @@ package cuckoofilter;
 
 public class Test {
 	public static void main(String[] args) {
-		CuckooFilterImpl cf = new CuckooFilterImpl(6,2);
+                //public CuckooFilterImpl();
+                //public CuckooFilterImpl(int numOfBuckets, int numOfSlots);		
+                //public boolean insertItem(String item);
+                //public boolean searchItem(String item);
+                //public void deleteItem(String item);
+
+                CuckooFilterImpl cf = new CuckooFilterImpl(6,2);
 		cf.insertItem("055");
 		cf.insertItem("177");
 		cf.insertItem("1845");
