@@ -1,0 +1,33 @@
+package skiplist2;
+
+public class Test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		SkipList skipList = new SkipList();
+		skipList.printHorizontal();
+		System.out.println(".....");
+		
+		skipList.put("q", "1");
+		skipList.printHorizontal();
+		System.out.println("111111");
+		
+		skipList.put("y", "6");
+		skipList.printHorizontal();
+		System.out.println("66666");
+		
+		skipList.put("x", "3");
+		skipList.printHorizontal();
+		System.out.println("33333");
+		
+		skipList.put("a", "2");
+		skipList.printHorizontal();
+		System.out.println("22222");
+		
+		skipList.put("b", "5");
+		skipList.printHorizontal();
+		System.out.println("55555");
+		//skipList.delete("b");
+	}
+
+}
