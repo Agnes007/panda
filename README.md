@@ -1,4 +1,5 @@
-# panda-git-remotetest and pulltest
+# panda-git-remotetest and pulltest —— conflicttest
+
 a simple in-memory storage engine that consists of  cuckoo filter, b+ tree and skiplist..
 
 SkipNode类：节点类，包括存储的key-value的值，每个节点有前后左右四个指针
