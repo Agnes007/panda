@@ -1,0 +1,48 @@
+package skiplist2;
+
+public class SkipListNode {
+
+	public String key;
+	public String value;
+	public int pos;//打印链表
+	public SkipListNode up,down,left,right;//指针
+	public static String negInf = new String("-oo");//负无穷
+	public static String posInf = new String("+oo");//正无穷
+	
+	public SkipListNode(String k,String v) {
+		key = k;
+		value = v;
+		up = down = left = right =null;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	public boolean equals(Object o) {
+		SkipListNode ent;
+		try {
+			ent = (SkipListNode) o;
+		} catch (ClassCastException e) {
+			// TODO: handle exception
+			return false;
+		}
+		return (ent.getKey() == key) && (ent.getValue() == value);
+		
+	}
+	public String toString() {
+		return "("+ key +","+value+")";
+	}
+}
