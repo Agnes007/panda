@@ -1,4 +1,4 @@
-# panda-git-remotetest and pulltest —— conflicttest
+# panda
 
 a simple in-memory storage engine that consists of  cuckoo filter, b+ tree and skiplist..
 
