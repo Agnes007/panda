@@ -1,0 +1,216 @@
+package skiplist2;
+
+import java.util.Random;
+
+public class SkipList {
+	private SkipListNode head;//顶层第一个元素
+	private SkipListNode tail;
+	private int n;//跳表元素个数
+	private int h;//跳表高度
+	private Random r;//掷硬币
+	public SkipList(){
+		SkipListNode p1,p2;
+		p1 = new SkipListNode(SkipListNode.negInf, null);//头
+		p2 = new SkipListNode(SkipListNode.posInf, null);//尾
+		head = p1;
+		tail = p2;
+		
+		p1.right = p2;
+		p2.left = p1;
+		
+		n = 0;
+		h = 0;
+		r = new Random();
+	}
+	public int size() {
+		return n;
+	}
+	public boolean isempty() {
+		return n == 0;
+	}
+	
+	//在最下层找到k要插入的位置
+	public SkipListNode findEntry(String k) {
+		SkipListNode pEntry;//头节点
+		pEntry = head;
+		while (true) {
+			while (pEntry.right.key != SkipListNode.posInf && pEntry.right.key.compareTo(k) <= 0) {
+				pEntry = pEntry.right;
+			}//向右寻找适合位置
+			if (pEntry.down != null) {
+				pEntry = pEntry.down;
+			}//当可以向下时，向下找
+			else {
+				break;//到达最底层，完成查找
+			}
+		}
+		return pEntry;
+		
+	}
+	
+	//返回k对应的value
+	public String get(String k) {
+		SkipListNode pEntry;
+		pEntry = findEntry(k);//找到K应该放的位置
+		if (k.equals(pEntry.getKey())) {
+			return pEntry.value;
+		} else {
+			return null;
+		}
+	}
+	
+	//跳表中插入k-v值
+	public String put(String k,String j) {
+		SkipListNode pEntry,qEntry;
+		int i;
+		pEntry = findEntry(k);//找到k应该放置的位置
+		if (k.equals(pEntry.getKey())) {
+			String old = pEntry.value;
+			pEntry.value = j;//key值相同，替换原来的value值
+			return old;//返回k的value值
+		}
+		
+		qEntry = new SkipListNode(k, j);
+		backLink(pEntry, qEntry);
+		
+		i = 0;//当前处于level0层
+		
+		while (r.nextDouble() < 0.5) {
+			//当超出高度要重新建一个顶层
+			if (i >= h) {
+				SkipListNode p1,p2;
+				h = h+1;
+				p1 = new SkipListNode(SkipListNode.negInf, null);//p1设置为头
+				p2 = new SkipListNode(SkipListNode.posInf, null);//p2设置为尾
+				
+				horizontalLink(p1, p2);
+				vertiacalLink(p1, head);
+				vertiacalLink(p2, tail);
+				
+				head = p1;
+				tail = p2;
+			}
+			
+			//把p移动到上一层
+			while (pEntry.up == null) {
+				pEntry = pEntry.left;
+			}
+			pEntry = pEntry.up;
+			
+			SkipListNode entry;
+			entry = new SkipListNode(k, null);
+			backLink(pEntry, entry);//在p节点后插入e
+			vertiacalLink(entry, pEntry);//p,e节点上下连接
+			qEntry = entry;//q进行下一层迭代
+			i++;//当前层增加
+		}
+		n = n+1;
+		return null;
+	}
+	
+	public boolean delete(String key) {
+		return true;
+	}
+	
+	//在p节点后插入q节点
+	public void backLink(SkipListNode pEntry,SkipListNode qEntry) {
+		qEntry.left = pEntry;
+		qEntry.right = pEntry.right;
+		pEntry.right.left = qEntry;
+		pEntry.right = qEntry;
+	}
+	
+	//节点水平连接
+	public void horizontalLink(SkipListNode pEntry,SkipListNode qEntry) {
+		pEntry.right = qEntry;
+		qEntry.left = pEntry;
+	}
+	
+	public void vertiacalLink(SkipListNode pEntry,SkipListNode qEntry) {
+		pEntry.down = qEntry;
+		qEntry.up = pEntry;
+	}
+	//水平打印
+	public void printHorizontal() {
+		String string="";
+		int i;
+		SkipListNode pEntry;
+		
+		pEntry = head;
+		
+		while (pEntry.down != null) {
+			pEntry = pEntry.down;
+		}
+		
+		i = 0;
+		while (pEntry != null) {
+			pEntry.pos = i++;
+			pEntry = pEntry.right;
+		}
+		
+		pEntry = head;
+		while (pEntry != null) {
+			string = getOneRow(pEntry);
+			System.out.println(string);
+			
+			pEntry = pEntry.down;
+		}
+	}
+	
+	//每行打印
+	private String getOneRow(SkipListNode pEntry) {
+		// TODO Auto-generated method stub
+		
+		String string;
+		int a,b;
+		
+		a = 0;
+		string = ""+pEntry.key;
+		pEntry = pEntry.right;
+		
+		while (pEntry != null) {
+			SkipListNode qEntry;
+			
+			qEntry = pEntry;
+			while (qEntry.down != null) 
+				qEntry = qEntry.down;
+			b = qEntry.pos;
+			
+			string = string +"<-";
+			for (int i = a+1; i < b; i++) {
+				string = string+"----";
+			}
+			string = string + ">" +pEntry.key;
+			
+			a = b;
+			pEntry = pEntry.right;
+		}
+		return string;
+	}
+	
+	/*//垂直打印
+	public void printVertical() {
+		String string = "";
+		SkipListNode pEntry;
+		pEntry = head;
+		while (pEntry.down != null) {
+			pEntry = pEntry.down;
+		}
+		while (pEntry != null) {
+			string = getOneColumn(pEntry);
+			System.out.println(string);
+			
+			pEntry = pEntry.right;
+		}
+	}
+	private String getOneColumn(SkipListNode pEntry) {
+		// TODO Auto-generated method stub
+		String string ="";
+		while (pEntry != null) {
+			string = string +" "+pEntry.key;
+			pEntry = pEntry.up;
+		}
+		return string;
+	}*/
+
+}
